@@ -1,8 +1,10 @@
 CC = g++ -o build/
 
-all: compile
+all: compile run
 
 compile:
 	mkdir -p build
 	$(CC)/main src/main.cpp
+
+run:
 	./build/main
