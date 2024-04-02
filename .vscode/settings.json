@@ -5,6 +5,7 @@
     "cmath": "cpp",
     "iomanip": "cpp",
     "limits": "cpp",
-    "fstream": "cpp"
+    "fstream": "cpp",
+    "iostream": "cpp"
   }
 }
