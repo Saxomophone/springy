@@ -14,7 +14,8 @@ class Spring {
   public:
     Point point1;
     Point point2;
-    double initial_length;
+    double length_old;
+    double length_new;
     double rest_length;
     double velocity = 0;
 
@@ -23,12 +24,12 @@ class Spring {
       point2{point2},  
       rest_length{rest_length} {
 
-      initial_length = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2));
+      length_old = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2));
     }
 
     double tick(double spring_constant, double mass) {  //spring_constant in N/m, mass in kg
       // calculate force: F = -kx (Hooke's Law)       (x = displacement, k = spring constant (stiffness))
-      double force = -spring_constant * (initial_length - rest_length);
+      double force = -spring_constant * (length_old - rest_length);
 
       // calculate acceleration (a = F/m)             (m = mass)
       double acceleration = force / mass;
@@ -41,22 +42,42 @@ class Spring {
       point2.y += velocity;
 
       // calculate length
-      double length = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2));
-      cout << "length: " << length << endl << '\n';
+      double length_new = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2));
+      cout << "length: " << length_new << endl << '\n';
 
-      return length;
+      return length_new;
     }
 };
 
+
+fstream open_file() {
+  fstream file;
+  file.open("generated/spring.csv", ios::out);
+  if (!file) {
+         cout << "Error while creating the file";
+     } else {
+         cout << "File created successfully";
+  }
+  return file;
+}
+
+
 int main() {
   Spring spring({0, 0}, {0, 10}, 5);
-  cout << "length: " << spring.initial_length << endl;
+  cout << "length: " << spring.length_old << endl;
   cout << "point 1: " << spring.point1.x << ", " << spring.point1.y << endl;
   cout << "point 2: " << spring.point2.x << ", " << spring.point2.y << endl;
 
-  double time = 0;
-  while (time < 10) {
-    spring.tick(1, 5);
+  
+  fstream file = open_file();
+  file << "time,velocity,length\n";
+
+  double time = 1;
+  while (time <= 50) {
+
+    spring.length_old = spring.tick(1, 10);
+    file << time << "," << spring.velocity << "," << spring.length_old << '\n';
+
     time++;
   }
   return 0;
