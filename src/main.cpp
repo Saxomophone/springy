@@ -73,10 +73,10 @@ int main() {
   file << "time,velocity,length\n";
 
   double time = 1;
-  while (time <= 50) {
+  while (time <= 100) {
 
-    spring.length_old = spring.tick(1, 10);
     file << time << "," << spring.velocity << "," << spring.length_old << '\n';
+    spring.length_old = spring.tick(1, 10);
 
     time++;
   }

@@ -8,3 +8,7 @@ compile:
 
 run:
 	./build/main
+	python3 src/plot.py
+
+plot:
+	python3 src/plot.py
