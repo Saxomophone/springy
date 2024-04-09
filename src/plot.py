@@ -20,7 +20,7 @@ with open('generated/spring.csv', 'r') as file:
     for row in reader:
         if row[0] == 'time':
             continue
-        time.append(int(row[0]))
+        time.append(float(row[0]))
         velocity.append(round(float(row[1]), 3))
         length.append(round(float(row[2]), 3))
 

@@ -3,7 +3,9 @@
 #include <vector>
 #include <cmath>
 #include <fstream>
-using namespace std;
+
+#define TimeIncrementSeconds 0.1
+#define TotalTimeSeconds 200
 
 struct Point {
   double x;
@@ -27,36 +29,36 @@ class Spring {
       length_old = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2));
     }
 
-    double tick(double spring_constant, double mass) {  //spring_constant in N/m, mass in kg
+    double tick(double spring_constant, double mass, double dt) {  //spring_constant in N/m, mass in kg
       // calculate force: F = -kx (Hooke's Law)       (x = displacement, k = spring constant (stiffness))
       double force = -spring_constant * (length_old - rest_length);
 
       // calculate acceleration (a = F/m)             (m = mass)
-      double acceleration = force / mass;
+      double acceleration = force / mass * dt;
 
       // calculate velocity
       velocity += acceleration;
-      cout << "velocity: " << velocity << endl;
+      std::cout << "velocity: " << velocity << std::endl;
 
       // calculate position (of point2 (assuming point1 is fixed))
-      point2.y += velocity;
+      point2.y += velocity * dt;
 
       // calculate length
       double length_new = sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2));
-      cout << "length: " << length_new << endl << '\n';
+      std::cout << "length: " << length_new << std::endl << '\n';
 
       return length_new;
     }
 };
 
 
-fstream open_file() {
-  fstream file;
-  file.open("generated/spring.csv", ios::out);
+std::fstream open_file() {
+  std::fstream file;
+  file.open("generated/spring.csv", std::ios::out);
   if (!file) {
-         cout << "Error while creating the file";
+         std::cout << "Error while creating the file";
      } else {
-         cout << "File created successfully";
+         std::cout << "File created successfully";
   }
   return file;
 }
@@ -64,21 +66,19 @@ fstream open_file() {
 
 int main() {
   Spring spring({0, 0}, {0, 10}, 5);
-  cout << "length: " << spring.length_old << endl;
-  cout << "point 1: " << spring.point1.x << ", " << spring.point1.y << endl;
-  cout << "point 2: " << spring.point2.x << ", " << spring.point2.y << endl;
 
   
-  fstream file = open_file();
+  std::fstream file = open_file();
   file << "time,velocity,length\n";
 
-  double time = 1;
-  while (time <= 100) {
+  double time = 0;
+  while (time <= TotalTimeSeconds) {
 
     file << time << "," << spring.velocity << "," << spring.length_old << '\n';
-    spring.length_old = spring.tick(1, 10);
+    spring.length_old = spring.tick(1, 10, TimeIncrementSeconds);
 
-    time++;
+    time += TimeIncrementSeconds;
+    std::cout << "time: " << time << std::endl;
   }
   return 0;
 }

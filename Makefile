@@ -4,6 +4,7 @@ all: compile run
 
 compile:
 	mkdir -p build
+	mkdir -p generated
 	$(CC)/main src/main.cpp
 
 run:
